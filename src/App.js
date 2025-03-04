@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import Home from './components/Home';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import FlightList from './components/FlightList';
+import FlightTracker from './components/FlightTracker';
+import ProtectedRoute from './components/ProtectedRoute';
+import SignOutButton from './components/SignOutButton';
 
-function App() {
+const App = () => {
+  const location = useLocation();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {location.pathname === '/track' && <SignOutButton />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/flights" element={<FlightList />} />
+        <Route
+          path="/track"
+          element={
+            <ProtectedRoute>
+              <FlightTracker />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </>
   );
-}
+};
 
-export default App;
+const AppWrapper = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default AppWrapper;
